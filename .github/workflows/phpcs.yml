@@ -40,5 +40,5 @@ jobs:
       - name: Install dependencies
         run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
-      - name: Execute PHPStan
+      - name: Execute PHPCS
         run: bin/phpcs
