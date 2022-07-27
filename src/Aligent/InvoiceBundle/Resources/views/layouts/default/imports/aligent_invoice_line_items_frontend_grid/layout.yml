@@ -1,0 +1,58 @@
+layout:
+    imports:
+        -
+            id: datagrid
+            root: __grid_container_body
+            namespace: grid_container
+
+    actions:
+        -   '@setBlockTheme':
+                themes: 'layout.html.twig'
+        -   '@addTree':
+                items:
+                    __grid_container:
+                        blockType: container
+                    __grid_container_head:
+                        blockType: container
+                    __grid_container_head_title:
+                        blockType: container
+                    __grid_container_head_title_text:
+                        blockType: text
+                        options:
+                            text: 'aligent.invoice.invoicelineitem.entity_plural_label'
+                    __grid_container_body:
+                        blockType: container
+                        options:
+                            additional_block_prefixes: [ 'order_body_block_container' ]
+                tree:
+                    __root:
+                        __grid_container:
+                            __grid_container_head:
+                                __grid_container_head_title:
+                                    __grid_container_head_title_text: ~
+                            __grid_container_body: ~
+
+        -   '@move':
+                id: __grid_container
+                siblingId: invoice_line_item_body_container
+
+        -   '@setOption':
+                id: __grid_container_datagrid
+                optionName: grid_name
+                optionValue: frontend-aligent-invoice-line-items-grid
+
+        -   '@setOption':
+                id: __grid_container_datagrid
+                optionName: grid_render_parameters.enableViews
+                optionValue: false
+
+        -   '@setOption':
+                id: __grid_container_datagrid
+                optionName: grid_parameters
+                optionValue:
+                    invoice_id: '=data["invoice"].getId()'
+
+        - '@appendOption':
+            id: __grid_container_datagrid
+            optionName: grid_render_parameters.cssClass
+            optionValue: 'responsive-shopping-list-grid responsive-shopping-list-grid-view responsive-checkout-grid order-invoice-datagrid'

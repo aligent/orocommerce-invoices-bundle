@@ -1,0 +1,13 @@
+features:
+    aligent_invoice.invoices_enabled:
+        label: aligent.invoice.system_configuration.fields.invoices_enabled.label
+        description: aligent.invoice.system_configuration.fields.invoices_enabled.description
+        toggle: aligent_invoice.invoices_enabled
+        routes:
+            - aligent_invoice_frontend_index
+            - aligent_invoice_frontend_view
+            - aligent_invoice_frontend_payment_create
+            - aligent_invoice_frontend_payment
+            - aligent_invoice_frontend_payment_save_state
+            - aligent_invoice_frontend_payment_success
+            - aligent_invoice_frontend_payment_error

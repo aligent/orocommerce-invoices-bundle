@@ -1,0 +1,12 @@
+.order-invoice-payment-summary {
+  @include breakpoint('tablet') {
+    .grid__row {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+  }
+
+  .order-invoice-payment-message {
+    margin-bottom: 1rem;
+  }
+}

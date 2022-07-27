@@ -1,0 +1,29 @@
+layout:
+    imports:
+        -
+            id: oro_customer_page
+        -
+            id: aligent_invoice_payment_form
+            root: page_content
+
+    actions:
+        - '@setOption':
+              id: page_title
+              optionName: defaultValue
+              optionValue: 'aligent.invoice.frontend.payment.title.label'
+
+        - '@add':
+                id: invoice_controls_wrapper
+                parentId: page_content
+                siblingId: page_title_container
+                prepend: false
+                blockType: container
+        - '@add':
+                id: aligent_invoice_list_link
+                parentId: invoice_controls_wrapper
+                blockType: link
+                options:
+                    visible: '=data["acl"].isGranted("aligent_invoice_frontend_view")'
+                    route_name: aligent_invoice_frontend_index
+                    text: 'aligent.invoice.frontend.invoice_link.text'
+

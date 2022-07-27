@@ -1,0 +1,78 @@
+{% extends 'OroUIBundle:actions:view.html.twig' %}
+{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+
+{% oro_title_set({params : {"%invoiceNo%": entity.invoiceNo } }) %}
+
+{% block pageHeader %}
+    {% set breadcrumbs = {
+        'entity':      entity,
+        'indexPath':   path('aligent_invoice_index'),
+        'indexLabel': 'aligent.invoice.entity_plural_label'|trans,
+        'entityTitle': entity.invoiceNo|default('N/A'|trans)
+    } %}
+
+    {{ parent() }}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% import 'OroUIBundle::macros.html.twig' as UI %}
+
+    {% set invoiceGeneraLeft %}
+        {{ UI.renderProperty('aligent.invoice.invoice_no.label'|trans, entity.invoiceNo) }}
+        {{ UI.renderProperty('aligent.invoice.status.label'|trans, entity.status|trans_enum('invoice_status')) }}
+        {{ UI.renderHtmlProperty(
+            'aligent.invoice.customer.label'|trans,
+            UI.entityViewLink(entity.customer, entity.customer|oro_format_name, 'oro_customer_customer_view')
+        ) }}
+        {{ UI.renderProperty('aligent.invoice.issue_date.label'|trans, entity.issueDate|oro_format_date) }}
+        {{ UI.renderProperty('aligent.invoice.due_date.label'|trans, entity.dueDate|oro_format_date) }}
+        {{ UI.renderProperty('aligent.invoice.amount.label'|trans,
+            entity.amount|oro_format_currency({'currency': entity.currency})) }}
+        {{ UI.renderProperty('aligent.invoice.tax_total.label'|trans,
+            entity.totalTax|oro_format_currency({'currency': entity.currency})) }}
+        {{ UI.renderProperty('aligent.invoice.amount_paid.label'|trans,
+            entity.amountPaid|oro_format_currency({'currency': entity.currency})) }}
+    {% endset %}
+
+    {% set invoiceGeneralRight %}
+        {# Blank for now #}
+    {% endset %}
+
+    {# General Tab #}
+    {% set dataBlocks = [{
+        'title': 'aligent.invoice.sections.general.label'|trans,
+        'subblocks': [
+            {'data' : [invoiceGeneraLeft]},
+            {'data' : [invoiceGeneralRight]},
+        ]
+    }] %}
+
+    {% set invoiceLineItemsGrid %}
+        {{ dataGrid.renderGrid('aligent-invoice-line-items-grid', {invoice_id: entity.id}, {cssClass: 'inner-grid'}) }}
+    {% endset %}
+
+    {# Invoice Line Items Tab #}
+    {% set dataBlocks = dataBlocks|merge([{
+        'title': 'aligent.invoice.sections.line_items.label'|trans,
+        'subblocks': [
+            {'data' : [invoiceLineItemsGrid]}
+        ]
+    }]) %}
+
+    {% set invoicePaymentsGrid %}
+        {{ dataGrid.renderGrid('aligent-invoice-payments-grid', {invoice_id: entity.id}, {cssClass: 'inner-grid'}) }}
+    {% endset %}
+
+    {# Invoice Line Items Tab #}
+    {% set dataBlocks = dataBlocks|merge([{
+        'title': 'aligent.invoice.sections.payments.label'|trans,
+        'subblocks': [
+            {'data' : [invoicePaymentsGrid]}
+        ]
+    }]) %}
+
+    {% set id = 'invoice-view' %}
+    {% set data = {'dataBlocks': dataBlocks} %}
+
+    {{ parent() }}
+{% endblock content_data %}
