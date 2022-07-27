@@ -19,7 +19,7 @@ class InvoiceController extends AbstractController
 {
     /**
      * @Route("/", name="aligent_invoice_index")
-     * @Template("AligentInvoiceBundle:AligentInvoice:index.html.twig")
+     * @Template("@AligentInvoice/AligentInvoice/index.html.twig")
      * @Acl(
      *      id="aligent_invoice_view",
      *      type="entity",
@@ -37,7 +37,7 @@ class InvoiceController extends AbstractController
 
     /**
      * @Route("/view/{id}", name="aligent_invoice_view", requirements={"id"="\d+"})
-     * @Template("AligentInvoiceBundle:AligentInvoice:view.html.twig")
+     * @Template("@AligentInvoice/AligentInvoice/view.html.twig")
      *
      * @param Invoice $invoice
      * @return array<string,mixed>

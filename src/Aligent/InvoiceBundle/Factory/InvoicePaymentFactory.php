@@ -79,7 +79,7 @@ class InvoicePaymentFactory
             ->setCustomerUser($customerUser)
             ->setCustomer($customerUser->getCustomer())
             ->setActive(true)
-            ->setPaymentMethod(''); // NOTE: This column is non-nullable
+            ->setPaymentMethod('') // NOTE: This column is non-nullable
         ;
 
         return $this->setInvoices($invoicePayment, $invoices);

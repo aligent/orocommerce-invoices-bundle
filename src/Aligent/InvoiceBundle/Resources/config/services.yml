@@ -149,3 +149,9 @@ services:
         calls:
             - [ 'addAction', [ !php/const Oro\Bundle\PaymentBundle\Method\PaymentMethodInterface::PURCHASE, '@oro_payment.action.purchase' ] ]
             - [ 'addAction', [ !php/const Oro\Bundle\PaymentBundle\Method\PaymentMethodInterface::VALIDATE, '@oro_payment.action.validate' ] ]
+
+    # Twig Extensions
+    Aligent\InvoiceBundle\Twig\DateTimeExtension:
+        parent: oro_locale.twig.date_time
+        tags:
+            - { name: twig.extension }
