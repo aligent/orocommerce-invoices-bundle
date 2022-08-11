@@ -14,7 +14,7 @@
     <span {{ block('block_attributes') }}>
         {{- block_widget(block) -}}
         {% if (text.id == constant('\\Aligent\\InvoiceBundle\\Entity\\Invoice::STATUS_OVERDUE')) %}
-            ({{ due_date|oro_datetime_since }})
+            ({{ due_date|aligent_datetime_since }})
         {% endif %}
     </span>
 {% endblock %}
@@ -28,7 +28,7 @@
 {% endblock %}
 
 {% block address_widget %}
-    {% from 'OroAddressBundle::macros.html.twig' import renderAddress %}
+    {% from '@OroAddress/macros.html.twig' import renderAddress %}
     {{ renderAddress(address, true) }}
 {% endblock %}
 

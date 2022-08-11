@@ -19,7 +19,6 @@ use Oro\Bundle\FormBundle\Model\UpdateHandlerFacade;
 use Oro\Bundle\LayoutBundle\Annotation\Layout;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use Oro\Bundle\UIBundle\Tools\FlashMessageHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -29,6 +28,26 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FrontendInvoiceController extends AbstractController
 {
+    protected UpdateHandlerFacade $updateHandler;
+    protected FrontendInvoiceProvider $frontendInvoiceProvider;
+    protected InvoicePaymentFactory $invoicePaymentFactory;
+    protected InvoicePaymentFormHandler $invoicePaymentFormHandler;
+    protected PaymentManager $paymentManager;
+
+    public function __construct(
+        UpdateHandlerFacade $updateHandler,
+        FrontendInvoiceProvider $frontendInvoiceProvider,
+        InvoicePaymentFactory $invoicePaymentFactory,
+        InvoicePaymentFormHandler $invoicePaymentFormHandler,
+        PaymentManager $paymentManager,
+    ) {
+        $this->updateHandler = $updateHandler;
+        $this->frontendInvoiceProvider = $frontendInvoiceProvider;
+        $this->invoicePaymentFactory = $invoicePaymentFactory;
+        $this->invoicePaymentFormHandler = $invoicePaymentFormHandler;
+        $this->paymentManager = $paymentManager;
+    }
+
     /**
      * @Route("/", name="aligent_invoice_frontend_index")
      * @Layout(vars={"entity_class"})
@@ -91,15 +110,9 @@ class FrontendInvoiceController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
 
         try {
-            $invoicePayment = $this
-                ->get(InvoicePaymentFactory::class)
-                ->createFromUnpaidInvoices(true);
+            $invoicePayment = $this->invoicePaymentFactory->createFromUnpaidInvoices(true);
         } catch (\Exception $e) {
-            $this->get(FlashMessageHelper::class)->addFlashMessage(
-                'error',
-                $e->getMessage(),
-                []
-            );
+            $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('aligent_invoice_frontend_index');
         }
 
@@ -125,12 +138,7 @@ class FrontendInvoiceController extends AbstractController
 
         if (!$invoicePayment->isActive()) {
             // Prevent complete Payments from being modified/reused
-            $this->get(FlashMessageHelper::class)
-                ->addFlashMessage(
-                    'error',
-                    'aligent.invoice.frontend.payment.inactive.message',
-                    []
-                );
+            $this->addFlash('error', 'aligent.invoice.frontend.payment.inactive.message');
 
             return $this->redirectToRoute('aligent_invoice_frontend_index');
         }
@@ -139,11 +147,7 @@ class FrontendInvoiceController extends AbstractController
          * Making a Payment requires the InvoicePaymentFormHandler
          * to actually capture/process the Payment
          */
-        return $this->update(
-            $invoicePayment,
-            $request,
-            $this->get(InvoicePaymentFormHandler::class)
-        );
+        return $this->update($invoicePayment, $request, $this->invoicePaymentFormHandler);
     }
 
     /**
@@ -157,7 +161,7 @@ class FrontendInvoiceController extends AbstractController
     {
         $form = $this->createForm(InvoicePaymentType::class, $invoicePayment);
 
-        $update = $this->get(FrontendInvoiceProvider::class)->createInvoicePaymentFormUpdate(
+        $update = $this->frontendInvoiceProvider->createInvoicePaymentFormUpdate(
             $invoicePayment,
             $form
         );
@@ -168,7 +172,7 @@ class FrontendInvoiceController extends AbstractController
 
         return new JsonResponse([
             'success' => false,
-            'message' => (string)$form->getErrors(false, true)
+            'message' => (string)$form->getErrors()
         ], Response::HTTP_BAD_REQUEST);
     }
 
@@ -185,10 +189,10 @@ class FrontendInvoiceController extends AbstractController
     ): array|RedirectResponse|JsonResponse {
         $form = $this->createForm(InvoicePaymentType::class, $invoicePayment);
 
-        $result = $this->get(UpdateHandlerFacade::class)->update(
+        $result = $this->updateHandler->update(
             $invoicePayment,
             $form,
-            null, // This needs to be empty to prevent saveState from triggering a flash message
+            '', // This needs to be empty to prevent saveState from triggering a flash message
             $request,
             $formHandler,
         );
@@ -205,10 +209,9 @@ class FrontendInvoiceController extends AbstractController
 
         // If the payment manager has a response use that
         // Or if the form failed validation then display the errors
-        $paymentManager = $this->get(PaymentManager::class);
-        if ($paymentManager->hasResponse()) {
+        if ($this->paymentManager->hasResponse()) {
             return new JsonResponse([
-                'responseData' => $paymentManager->getResponse()
+                'responseData' => $this->paymentManager->getResponse()
             ]);
         } elseif (count($errors) > 0) {
             return new JsonResponse([
@@ -234,12 +237,7 @@ class FrontendInvoiceController extends AbstractController
      */
     public function successAction(InvoicePayment $payment): RedirectResponse
     {
-        $this->get(FlashMessageHelper::class)
-            ->addFlashMessage(
-                'success',
-                'aligent.invoice.frontend.payment.success.message',
-                []
-            );
+        $this->addFlash('success', 'aligent.invoice.frontend.payment.success.message');
 
         return $this->redirectToRoute('aligent_invoice_frontend_index');
     }
@@ -252,28 +250,8 @@ class FrontendInvoiceController extends AbstractController
      */
     public function errorAction(InvoicePayment $payment): RedirectResponse
     {
-        $this->get(FlashMessageHelper::class)
-            ->addFlashMessage(
-                'success',
-                'aligent.invoice.frontend.payment.failed.message',
-                []
-            );
+        $this->addFlash('success', 'aligent.invoice.frontend.payment.failed.message');
 
         return $this->redirectToRoute('aligent_invoice_frontend_payment', ['id' => $payment->getId()]);
-    }
-
-    /**
-     * @return array<string>
-     */
-    public static function getSubscribedServices(): array
-    {
-        return array_merge(parent::getSubscribedServices(), [
-            UpdateHandlerFacade::class,
-            FrontendInvoiceProvider::class,
-            InvoicePaymentFactory::class,
-            FlashMessageHelper::class,
-            InvoicePaymentFormHandler::class,
-            PaymentManager::class,
-        ]);
     }
 }

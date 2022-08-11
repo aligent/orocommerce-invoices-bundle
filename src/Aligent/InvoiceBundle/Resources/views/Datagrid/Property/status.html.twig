@@ -1,6 +1,6 @@
 <span class="invoice-grid-status-{{value}}">
     {{ value|trans_enum('invoice_status') }}
     {% if (value == constant('\\Aligent\\InvoiceBundle\\Entity\\Invoice::STATUS_OVERDUE')) %}
-        <br>({{ record.getValue('dueDate')|oro_datetime_since }})
+        <br>({{ record.getValue('dueDate')|aligent_datetime_since }})
     {% endif %}
 </span>

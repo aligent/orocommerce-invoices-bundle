@@ -2,7 +2,19 @@ services:
     _defaults:
         public: true
 
+    Aligent\InvoiceBundle\Controller\InvoiceController:
+        calls:
+            - ['setContainer', ['@Psr\Container\ContainerInterface']]
+        tags:
+            - { name: container.service_subscriber }
+
     Aligent\InvoiceBundle\Controller\Frontend\FrontendInvoiceController:
+        arguments:
+            - '@oro_form.update_handler'
+            - '@Aligent\InvoiceBundle\Provider\FrontendInvoiceProvider'
+            - '@Aligent\InvoiceBundle\Factory\InvoicePaymentFactory'
+            - '@Aligent\InvoiceBundle\Form\Handler\InvoicePaymentFormHandler'
+            - '@Aligent\InvoiceBundle\Manager\PaymentManager'
         calls:
             - ['setContainer', ['@Psr\Container\ContainerInterface']]
         tags:

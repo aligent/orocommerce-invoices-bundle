@@ -35,17 +35,17 @@ datagrids:
                 label: aligent.invoice.status.label
                 type: twig
                 frontend_type: html
-                template: AligentInvoiceBundle:Datagrid/Property:status.html.twig
+                template: '@AligentInvoice/Datagrid/Property/status.html.twig'
             issueDate:
                 label: aligent.invoice.issue_date.label
                 type: twig
                 frontend_type: html
-                template: AligentInvoiceBundle:Datagrid/Property:date.html.twig
+                template: '@AligentInvoice/Datagrid/Property/date.html.twig'
             dueDate:
                 label: aligent.invoice.due_date.label
                 type: twig
                 frontend_type: html
-                template: AligentInvoiceBundle:Datagrid/Property:date.html.twig
+                template: '@AligentInvoice/Datagrid/Property/date.html.twig'
             amount:
                 label: aligent.invoice.amount.label
                 frontend_type: currency
@@ -243,12 +243,12 @@ datagrids:
                 label: oro.payment.paymenttransaction.paymentMethod.label
                 type: twig
                 frontend_type: html
-                template: 'OroPaymentBundle:PaymentTransaction/Datagrid:paymentMethod.html.twig'
+                template: '@OroPayment/PaymentTransaction/Datagrid/paymentMethod.html.twig'
             action:
                 label: oro.payment.paymenttransaction.action.label
                 type: twig
                 frontend_type: html
-                template: 'OroPaymentBundle:PaymentTransaction/Datagrid:action.html.twig'
+                template: '@OroPayment/PaymentTransaction/Datagrid/action.html.twig'
             successful:
                 label: oro.payment.paymenttransaction.successful.label
                 frontend_type: boolean
@@ -296,7 +296,7 @@ datagrids:
                 label: aligent.invoice.status.label
                 type: twig
                 frontend_type: html
-                template: AligentInvoiceBundle:Datagrid/Property:status.html.twig
+                template: '@AligentInvoice/Datagrid/Property/status.html.twig'
             amount:
                 label: aligent.invoice.amount.label
                 frontend_type: currency
@@ -307,17 +307,17 @@ datagrids:
                 label: aligent.invoice.issue_date.label
                 type: twig
                 frontend_type: html
-                template: AligentInvoiceBundle:Datagrid/Property:date.html.twig
+                template: '@AligentInvoice/Datagrid/Property/date.html.twig'
             dueDate:
                 label: aligent.invoice.due_date.label
                 type: twig
                 frontend_type: html
-                template: AligentInvoiceBundle:Datagrid/Property:date.html.twig
+                template: '@AligentInvoice/Datagrid/Property/date.html.twig'
             paymentAmount:
                 label: aligent.invoice.frontend.payment.line_items.payment_amount.label
                 type: twig
                 frontend_type: html
-                template: AligentInvoiceBundle:Datagrid/Property:amountInput.html.twig
+                template: '@AligentInvoice/Datagrid/Property/amountInput.html.twig'
         properties:
             id: ~
             view_link:
