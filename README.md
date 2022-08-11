@@ -61,6 +61,13 @@ select the available Payment Methods for Invoice Payments, and optionally displa
 a custom message on the Invoice Payment form.
 
 
+### Demo Data Fixtures
+For testing purposes this Bundle includes a set of sample Invoices with various statuses (open, overdue, paid).
+These can be loaded in a development environment using the following command:
+```shell
+php bin/console oro:migration:data:load --env=dev --fixtures-type=demo --bundles=AligentInvoiceBundle -vvv
+```
+
 Database Modifications
 -------------------
 ### Database Tables Created
@@ -152,9 +159,9 @@ Roadmap / Remaining Tasks
 -------------------
 - [x] OroCommerce 5.0 Support
 - [x] Implement Unit Tests
+- [x] Implement Demo Invoice Data Fixtures (using [aligent/oro-fixtures](https://github.com/aligent/oro-fixtures))
 - [ ] Update Payment Methods Configuration to use Rules instead of Methods ([#2](https://github.com/aligent/orocommerce-invoices-bundle/issues/2))
 - [ ] Improve reliability/usability of Invoice Payment JavaScript components and SaveState feature
-- [ ] Implement Demo Invoice Data Fixtures (using [aligent/oro-fixtures](https://github.com/aligent/oro-fixtures))
 - [ ] Add ability to disable Invoice Payments globally (view-only mode)
 - [ ] Implement Admin CRUD UI for Invoices with User Role ACL Permissions
 - [ ] Automatically clean up old pending Invoice Payments (but preserve failed records)
