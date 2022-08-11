@@ -1,0 +1,151 @@
+services:
+
+    # Factories
+    Aligent\InvoiceBundle\Factory\InvoicePaymentFactory:
+        arguments:
+            - '@oro_security.token_accessor'
+            - '@Aligent\InvoiceBundle\Provider\FrontendInvoiceProvider'
+            - '@doctrine'
+
+    # Providers
+    aligent.invoice.provider.invoice_provider:
+        class: Aligent\InvoiceBundle\Provider\InvoiceProvider
+        public: true
+        arguments:
+            - '@doctrine'
+            - '@oro_locale.settings'
+
+    Aligent\InvoiceBundle\Provider\InvoiceProvider:
+        public: true
+        alias: aligent.invoice.provider.invoice_provider
+
+    Aligent\InvoiceBundle\Provider\FrontendInvoiceProvider:
+        public: true
+        arguments:
+            - '@doctrine'
+            - '@oro_security.acl_helper'
+            - '@oro_form.update_factory'
+
+    Aligent\InvoiceBundle\Provider\FrontendPaymentFormProvider:
+        public: true
+        arguments:
+            - '@form.factory'
+            - '@router'
+        calls:
+            - ['setInvoicePaymentFactory', ['@Aligent\InvoiceBundle\Factory\InvoicePaymentFactory']]
+        tags:
+            - { name: layout.data_provider, alias: aligent_payment_type }
+
+    # Block Types
+    aligent_invoice.block.invoice_payment:
+        parent: oro_layout.block_type.abstract_configurable
+        calls:
+            - [setOptionsConfig, [{invoicePayment: {required: true}}]]
+            - [setName, ['invoice_payment']]
+        tags:
+            - { name: layout.block_type, alias: invoice_payment }
+
+    # Form Handler
+    Aligent\InvoiceBundle\Form\Handler\InvoicePaymentFormHandler:
+        parent: oro_form.form.handler.default
+        calls:
+            - ['setPaymentManager', ['@Aligent\InvoiceBundle\Manager\PaymentManager']]
+
+    # Form Types
+    Aligent\InvoiceBundle\Form\Type\PaymentMethodMultiSelectFormType:
+        arguments:
+            - '@oro_payment.payment_method.composite_provider'
+            - '@oro_payment.payment_method_view.composite_provider'
+        tags:
+            - { name: form.type, alias: aligent_invoice_payment_method }
+
+    Aligent\InvoiceBundle\Form\Type\InvoicePaymentType:
+        arguments:
+            - '@Aligent\InvoiceBundle\Factory\InvoicePaymentFactory'
+            - '@Aligent\InvoiceBundle\Provider\FrontendInvoiceProvider'
+            - '@oro_pricing.subtotal_processor.total_processor_provider'
+        tags:
+            - { name: form.type, alias: "aligent_invoice_payment" }
+
+    # Datagrid Views
+    aligent.invoice.datagrid.invoice_view_list:
+        class: Aligent\InvoiceBundle\Datagrid\InvoiceViewList
+        public: true
+        arguments:
+            - '@translator'
+
+    # Event Listeners
+    Aligent\InvoiceBundle\EventListener\FrontendInvoicePaymentLineItemsGridListener:
+        arguments:
+            - '@Aligent\InvoiceBundle\Factory\InvoicePaymentFactory'
+            - '@Aligent\InvoiceBundle\Provider\FrontendInvoiceProvider'
+        tags:
+            - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after.frontend-aligent-invoice-payment-line-items-edit-grid, method: onBuildAfter }
+
+    Aligent\InvoiceBundle\EventListener\RecalculateInvoicePaidAmountsListener:
+        arguments:
+            - '@doctrine'
+        tags:
+            - { name: kernel.event_listener, event: aligent.invoice.payment_success, method: recalculate }
+
+    # Payment Data Providers
+    Aligent\InvoiceBundle\Layout\DataProvider\TotalsProvider:
+        arguments:
+            - '@Aligent\InvoiceBundle\Provider\InvoicePaymentTotalsProvider'
+        tags:
+            - { name: layout.data_provider, alias: aligent_invoice_payment_totals }
+
+    Aligent\InvoiceBundle\Layout\DataProvider\PaymentMethodViewsProvider:
+        arguments:
+            - '@oro_payment.payment_method_view.composite_provider'
+            - '@aligent_payments.method.provider.method_provider'
+        tags:
+            - { name: layout.data_provider, alias: aligent_payment_method_views }
+
+    Aligent\InvoiceBundle\Layout\DataProvider\PaymentContextProvider:
+        arguments:
+            - '@Aligent\InvoiceBundle\Factory\PaymentContextFactory'
+        tags:
+            - { name: layout.data_provider, alias: aligent_payment_context }
+
+    # Providers
+    Aligent\InvoiceBundle\Provider\InvoicePaymentSubtotalProvider:
+        public: false
+        arguments:
+            - '@oro_pricing.subtotal_processor.provider.arguments'
+            - '@translator'
+        tags:
+            - { name: oro_pricing.subtotal_provider, alias: aligent_invoice_payment.subtotal_payment_fee }
+
+    Aligent\InvoiceBundle\Provider\InvoicePaymentTotalsProvider:
+        public: true
+        arguments:
+            - '@oro_pricing.subtotal_processor.total_processor_provider'
+
+    aligent_payments.method.provider.method_provider:
+        class: 'Oro\Bundle\PaymentBundle\Method\Provider\ApplicablePaymentMethodsProvider'
+        arguments:
+            - '@oro_payment.payment_method.composite_provider'
+            - '@Aligent\InvoiceBundle\Provider\MethodsConfigsRule\Context\Configured\ConfiguredMethodsConfigsRulesByContextProvider'
+
+    Aligent\InvoiceBundle\Provider\MethodsConfigsRule\Context\Configured\ConfiguredMethodsConfigsRulesByContextProvider:
+        arguments:
+            - '@oro_payment.repository.payment_methods_configs_rule'
+            - '@oro_config.manager'
+
+    # Factories
+    Aligent\InvoiceBundle\Factory\PaymentContextFactory:
+        arguments:
+          - '@oro_payment.context.builder_factory_basic'
+
+    # Payment Manager
+    Aligent\InvoiceBundle\Manager\PaymentManager:
+        public: true
+        arguments:
+            - '@oro_payment.payment_method.composite_provider'
+            - '@oro_payment.provider.payment_transaction'
+            - '@router'
+            - '@logger'
+        calls:
+            - [ 'addAction', [ !php/const Oro\Bundle\PaymentBundle\Method\PaymentMethodInterface::PURCHASE, '@oro_payment.action.purchase' ] ]
+            - [ 'addAction', [ !php/const Oro\Bundle\PaymentBundle\Method\PaymentMethodInterface::VALIDATE, '@oro_payment.action.validate' ] ]

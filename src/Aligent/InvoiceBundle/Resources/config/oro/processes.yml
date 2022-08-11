@@ -1,0 +1,50 @@
+processes:
+    definitions:
+        aligent_set_invoices_as_overdue:
+            label: "Set Invoices as Overdue if past the Due Date"
+            enabled: true
+            entity: Aligent\InvoiceBundle\Entity\Invoice
+            order: 20
+            exclude_definitions: [aligent_set_invoices_as_overdue]
+            actions_configuration:
+                - '@assign_constant_value':
+                      attribute: $.statusOverdue
+                      value: Aligent\InvoiceBundle\Entity\Invoice::STATUS_OVERDUE
+                - '@request_enum_entity':
+                      enum_code: 'invoice_status'
+                      attribute: $.targetStatus
+                      identifier: $.statusOverdue
+                - '@tree':
+                      actions:
+                          - '@call_service_method':
+                                service: aligent.invoice.provider.invoice_provider
+                                method: getOverdueInvoices
+                                attribute: $.overdueInvoices
+                          - '@foreach':
+                                array: $.overdueInvoices
+                                value: $.overdueInvoice
+                                actions:
+                                    - '@assign_value': [ $.overdueInvoice.status, $.targetStatus ]
+
+    triggers:
+        aligent_set_invoices_as_overdue:
+            # When Invoices are created
+            -
+                event: create
+                queued: true
+                time_shift: 5
+            # If Status is modified
+            -
+                event: update
+                queued: true
+                time_shift: 5
+                field: status
+            # If Due Date is modified
+            -
+                event: update
+                queued: true
+                time_shift: 5
+                field: dueDate
+            # Every hour
+            -
+                cron: '0 * * * *'

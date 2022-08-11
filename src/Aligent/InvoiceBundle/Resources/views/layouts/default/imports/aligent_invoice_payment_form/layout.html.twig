@@ -1,0 +1,100 @@
+{% block __aligent_invoice_payment_form__container_widget %}
+    {% set attr = layout_attr_defaults(attr, {
+        '~class': ' customer_user_form',
+        'data-focusable': true,
+    }) %}
+    <div{{ block('block_attributes') }}
+        data-page-component-module="aligentinvoice/js/app/components/payments-component"
+        data-page-component-options="{{ {
+            'saveStateRoute': 'aligent_invoice_frontend_payment_save_state'
+        }|json_encode }}">
+        {{ block_widget(block) }}
+    </div>
+{% endblock %}
+
+{% block __aligent_invoice_payment_form__form_fields_widget %}
+    {#
+        NOTE: We have to list all the InvoicePaymentType fields individually so as to prevent the
+              additional_data hidden input from being included here, as we don't want it to be
+              included in the subtree update. Subtree updates causes the additional_data field to
+              appear twice for some reason, which breaks FatZebra payments.
+              (it doesn't know which additional_data field to load the payment nonce from so payments fail)
+    #}
+    {{ form_widget(form.id) }}
+    {{ form_widget(form.payment_append_invoices, {'id': 'paymentAppendInvoices'}) }}
+    {{ form_widget(form.payment_remove_invoices, {'id': 'paymentRemoveInvoices'}) }}
+    {{ form_widget(form.payment_method) }}
+    {{ form_widget(form._token) }}
+{% endblock %}
+
+{% block order_body_block_container_widget %}
+    <div class="grid__row">
+        {{ block_widget(block) }}
+    </div>
+{% endblock %}
+
+{% block order_body_column_widget %}
+    {% set attr = layout_attr_defaults(attr, {
+        '~class': " grid__column grid__column--6 grid__column--no-gutters-l"
+    }) %}
+    <div {{ block('block_attributes') }}>
+        {{ block_widget(block) }}
+    </div>
+{% endblock %}
+
+{% block __aligent_invoice_payment_form__form_actions_submit_widget %}
+    <div class="form-buttons">
+        {{ block_widget(block) }}
+    </div>
+{% endblock %}
+
+{% block __aligent_invoice_payment_form__form_required_label_widget %}
+    {% set attr = layout_attr_defaults(attr, {
+        '~class': ' required-label',
+        'aria-hidden': 'true'
+    }) %}
+
+    <p {{ block('block_attributes') }}><sup>*</sup> {{ 'Required'|trans }}</p>
+{% endblock %}
+
+{% block _payment_additional_data_widget %}
+    {% set blockPrefix = options.block_prefix %}
+    {% for paymentMethod,view in options.views %}
+        {% set options = {payment_method: paymentMethod} %}
+        {{ block('_' ~ blockPrefix ~ view.block) }}
+    {% endfor %}
+{% endblock %}
+
+{% block _payment_methods_hidden_widget %}
+    <div class="hidden">
+        {% if form.additional_data is defined %}
+            <div data-page-component-module="orocheckout/js/app/components/payment-additional-data-component">
+                {{ form_row(form.additional_data) }}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block __aligent_invoice_payment_form__custom_message_widget %}
+    {% set attr = layout_attr_defaults(attr, {
+        '~class': ' order-invoice-payment-message notification notification--warning'
+    }) %}
+    <div {{ block('block_attributes') }} role="alert">
+        <div class="notification__item">
+            <span class="fa-info-circle" aria-hidden="true"></span>
+            <span class="notification__text">{{ customText }}</span>
+        </div>
+    </div>
+{% endblock %}
+
+{% block _invoice_payment_body_container_widget %}
+    <div class="order-invoice-payment-summary">
+        {{ block_widget(block) }}
+    </div>
+{% endblock %}
+
+{% block __aligent_invoice_payment_form__payment_summary_totals_widget %}
+    <div class="order-checkout-widget__container order-checkout-widget__container--fixed-width order-invoice-widget">
+    {{ block_widget(block) }}
+    </div>
+{% endblock %}

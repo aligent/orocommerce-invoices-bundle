@@ -1,0 +1,47 @@
+system_configuration:
+    groups:
+        invoice_management:
+            title: aligent.invoice.system_configuration.groups.invoice_management.title
+            icon: fa-gear
+    fields:
+        aligent_invoice.invoices_enabled:
+            data_type: boolean
+            type: Oro\Bundle\ConfigBundle\Form\Type\ConfigCheckbox
+            priority: 100
+            options:
+                label: aligent.invoice.system_configuration.fields.invoices_enabled.label
+                tooltip: aligent.invoice.system_configuration.fields.invoices_enabled.tooltip
+        aligent_invoice.invoices_payment_methods:
+            data_type: array
+            type: Aligent\InvoiceBundle\Form\Type\PaymentMethodMultiSelectFormType
+            priority: 90
+            options:
+                label: aligent.invoice.system_configuration.fields.invoice_payment_methods.label
+                tooltip: aligent.invoice.system_configuration.fields.invoice_payment_methods.tooltip
+        aligent_invoice.invoices_payment_message_enabled:
+            data_type: boolean
+            type: Oro\Bundle\ConfigBundle\Form\Type\ConfigCheckbox
+            priority: 50
+            options:
+                label: aligent.invoice.system_configuration.fields.payment_message_enabled.label
+                tooltip: aligent.invoice.system_configuration.fields.payment_message_enabled.tooltip
+        aligent_invoice.invoices_payment_message_text:
+            data_type: string
+            type: Symfony\Component\Form\Extension\Core\Type\TextareaType
+            priority: 40
+            options:
+                label: aligent.invoice.system_configuration.fields.payment_message_text.label
+    tree:
+        system_configuration:
+            commerce:
+                children:
+                    orders:
+                        children:
+                            invoice_management:
+                                children:
+                                    invoice_management:
+                                        children:
+                                            - aligent_invoice.invoices_enabled
+                                            - aligent_invoice.invoices_payment_methods
+                                            - aligent_invoice.invoices_payment_message_enabled
+                                            - aligent_invoice.invoices_payment_message_text

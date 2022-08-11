@@ -1,0 +1,25 @@
+{% set fieldId = 'aligent_invoice_payment_price_value-uid-'|uniqid %}
+{% set fieldName = 'aligent_invoice_payment[invoices][amount][' ~ record.getValue('id') ~ ']' %}
+
+{% set invoiceBalance = record.getValue('balance') %}
+{% set validationAttr = {
+    Range: {min: 1.00, max: invoiceBalance},
+    NotBlank: {message:"oro.currency.price.value.blank",allowNull:false}
+}|json_encode
+%}
+<input
+        type="number"
+        id="{{ fieldId }}"
+        name="{{ fieldName }}"
+        required="required"
+        data-match-price-on-null="1"
+        data-required="data-required"
+        data-bound-input-widget="no-name"
+        data-limit-decimals="1"
+        class="input input-widget"
+        value="{{ value }}"
+        min="1.00"
+        max="{{ invoiceBalance }}"
+        step=".01"
+        data-validation="{{ validationAttr }}"
+>

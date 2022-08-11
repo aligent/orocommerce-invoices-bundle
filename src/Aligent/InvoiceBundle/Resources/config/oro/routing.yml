@@ -1,0 +1,12 @@
+aligent_invoices:
+    resource: "@AligentInvoiceBundle/Controller/InvoiceController.php"
+    type: annotation
+    prefix: /aligent/invoice
+
+aligent_frontend_invoices:
+    resource: "@AligentInvoiceBundle/Controller/Frontend/FrontendInvoiceController.php"
+    type: annotation
+    prefix: /customer/invoice
+    options:
+        frontend: true
+        expose: true

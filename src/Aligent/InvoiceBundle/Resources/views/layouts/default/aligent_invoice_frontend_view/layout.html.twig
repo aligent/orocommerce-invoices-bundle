@@ -1,0 +1,65 @@
+{% block _invoice_line_item_header_widget %}
+    {% set attr = layout_attr_defaults(attr, {
+        '~class': " customer-info-grid__title"
+    }) %}
+    <h2 style="margin: 23px 0 8px; font-size: 16px; text-transform: uppercase;" {{ block('block_attributes') }}>
+        {{- block_widget(block) -}}
+    </h2>
+{% endblock %}
+
+{% block _invoice_status_value_widget %}
+    {% set attr = layout_attr_defaults(attr, {
+        '~class': " invoice-grid-status-" ~ text.id
+    }) %}
+    <span {{ block('block_attributes') }}>
+        {{- block_widget(block) -}}
+        {% if (text.id == constant('\\Aligent\\InvoiceBundle\\Entity\\Invoice::STATUS_OVERDUE')) %}
+            ({{ due_date|oro_datetime_since }})
+        {% endif %}
+    </span>
+{% endblock %}
+
+{% block currency_widget %}
+    {{ value|oro_format_currency({currency: currency, attributes: attributes, textAttributes: textAttributes, symbols: symbols, locale: locale}) }}
+{% endblock %}
+
+{% block date_widget %}
+    {{ date|oro_format_date({dateType: dateType, locale: locale, timeZone: timeZone}) }}
+{% endblock %}
+
+{% block address_widget %}
+    {% from 'OroAddressBundle::macros.html.twig' import renderAddress %}
+    {{ renderAddress(address, true) }}
+{% endblock %}
+
+{% block order_body_column_widget %}
+    {% set attr = layout_attr_defaults(attr, {
+        '~class': " grid__column grid__column--6 grid__column--no-gutters-l"
+    }) %}
+
+    <div {{ block('block_attributes') }}>
+        <table class="customer-info-grid__table">
+            <tbody>
+            {{ block_widget(block) }}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block order_body_block_container_widget %}
+    <div class="grid__row">
+        {{ block_widget(block) }}
+    </div>
+{% endblock %}
+
+{% block order_body_column_element_widget %}
+    {% set attr = layout_attr_defaults(attr, {
+        '~class': " customer-info-grid__element customer-info-grid__element--" ~ block.vars.id
+    }) %}
+    <tr {{ block('block_attributes') }}>
+        <td class="customer-info-grid__element-label">{{ label|trans }}</td>
+        <td class="customer-info-grid__element-content">
+            <span class="customer-info-grid__element-value">{{- block_widget(block) -}}</span>
+        </td>
+    </tr>
+{% endblock %}

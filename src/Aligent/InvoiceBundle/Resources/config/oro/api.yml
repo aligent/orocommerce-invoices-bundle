@@ -1,0 +1,88 @@
+api:
+    entity_aliases:
+        Aligent\InvoiceBundle\Entity\Invoice:
+            alias: aligentinvoice
+            plural_alias: aligentinvoices
+        Aligent\InvoiceBundle\Entity\InvoiceLineItem:
+            alias: aligentinvoicelineitem
+            plural_alias: aligentinvoicelineitems
+        Aligent\InvoiceBundle\Entity\InvoicePayment:
+            alias: aligentinvoicepayment
+            plural_alias: aligentinvoicepayments
+        Aligent\InvoiceBundle\Entity\InvoicePaymentLineItem:
+            alias: aligentinvoicepaymentlineitem
+            plural_alias: aligentinvoicepaymentlineitems
+        Extend\Entity\EV_Invoice_Status:
+            alias: aligentinvoicestatus
+            plural_alias: aligentinvoicestatuses
+
+    entities:
+        Aligent\InvoiceBundle\Entity\Invoice:
+            documentation_resource: '@AligentInvoiceBundle/Resources/doc/api/invoice.md'
+            disable_meta_properties: false
+            disable_fieldset: false
+            identifier_field_names: [ id ]
+            fields:
+                status:
+                    property_path: status
+                    form_options:
+                        mapped: true
+            subresources:
+                status:
+                    target_class: Extend\Entity\EV_Invoice_Status
+                    actions:
+                        update_relationship: true
+            filters:
+                fields:
+                    status:
+                        description: Filter records by Status, eg open, paid, cancelled, overdue
+                        property_path: status
+            actions:
+                get_list: true
+                get: true
+                delete: true
+                create: true
+                update: true
+                delete_list: true
+                get_subresource: true
+                get_relationship: true
+
+        Aligent\InvoiceBundle\Entity\InvoiceLineItem:
+            documentation_resource: '@AligentInvoiceBundle/Resources/doc/api/invoicelineitem.md'
+            subresources:
+                invoice:
+                    actions:
+                        update_relationship: false
+
+        Aligent\InvoiceBundle\Entity\InvoicePayment:
+            documentation_resource: '@AligentInvoiceBundle/Resources/doc/api/invoicepayment.md'
+            disable_meta_properties: false
+            disable_fieldset: false
+            identifier_field_names: [ id ]
+            actions:
+                get_list: true
+                get: true
+                delete: false
+                create: false
+                update: false
+                delete_list: false
+                get_subresource: true
+                get_relationship: true
+            filters:
+                fields:
+                    updatedAt:
+                        description: Filter records by UpdatedAt
+                        property_path: updatedAt
+            sorters:
+                fields:
+                    updatedAt:
+                        property_path: updatedAt
+
+        Aligent\InvoiceBundle\Entity\InvoicePaymentLineItem:
+            subresources:
+                invoicePayment:
+                    actions:
+                        update_relationship: false
+                invoice:
+                    actions:
+                        update_relationship: false

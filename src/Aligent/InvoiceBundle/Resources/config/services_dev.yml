@@ -1,0 +1,5 @@
+services:
+    # Demo Data Fixture Initializers
+    Aligent\InvoiceBundle\Initializer\InvoiceStatusEnumInitializer:
+        tags:
+            - { name: demo_fixtures.initializer }
