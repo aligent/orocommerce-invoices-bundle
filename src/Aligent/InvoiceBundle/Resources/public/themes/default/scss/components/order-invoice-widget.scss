@@ -1,0 +1,68 @@
+.order-invoice-datagrid {
+  .grid-body-cell {
+    vertical-align: middle;
+  }
+
+  @include breakpoint('tablet') {
+    .grid-row {
+      columns: 200px 2;
+    }
+
+    .grid {
+      &-body-cell {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+
+        &:before {
+          content: attr(data-column-label) ': ';
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  @include breakpoint('mobile-landscape') {
+    .grid-body-cell-invoiceStatusId span {
+      text-align: right;
+    }
+
+    .grid {
+      &-body-cell {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+
+        &:before {
+          content: attr(data-column-label) ': ';
+          display: inline-block;
+        }
+      }
+    }
+
+    .grid-row.has-actions {
+      padding-right: 0 !important; // action adding transition that I can't remove
+      margin-right: 0 !important; // action adding transition that I can't remove
+    }
+
+    .grid-body-cell.action-cell {
+      position: relative;
+      display: none;
+    }
+  }
+}
+
+@include breakpoint('tablet') {
+  .order-checkout-widget__container--fixed-width {
+    width: 100%;
+  }
+}
+
+
+@include breakpoint('mobile-landscape') {
+  .order-invoice-widget {
+    width: 100%;
+    clear: both;
+    margin-bottom: 2rem;
+  }
+}

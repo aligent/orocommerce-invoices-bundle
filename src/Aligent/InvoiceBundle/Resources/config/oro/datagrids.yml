@@ -1,0 +1,336 @@
+datagrids:
+    base-aligent-invoices-grid:
+        extended_entity_name: 'Aligent\InvoiceBundle\Entity\Invoice'
+        options:
+            entityHint: aligent.invoice.entity_plural_label
+            frontend: false
+            mass_actions:
+                delete:
+                    enabled: false
+        source:
+            type: orm
+            query:
+                select:
+                    - invoice.id
+                    - invoice.invoiceNo
+                    - invoice.issueDate
+                    - invoice.dueDate
+                    - invoice.amount
+                    - invoice.amountPaid
+                    - invoice.totalTax
+                    - invoice.currency
+                    - IDENTITY(invoice.status) as invoiceStatusId
+                    - invoice.createdAt
+                    - invoice.updatedAt
+                    - (invoice.amount - invoice.amountPaid) as balance
+                from:
+                    - { table: Aligent\InvoiceBundle\Entity\Invoice, alias: invoice }
+        columns:
+            id:
+                renderable: false
+                label: aligent.invoice.id.label
+            invoiceNo:
+                label: aligent.invoice.invoice_no.label
+            invoiceStatusId:
+                label: aligent.invoice.status.label
+                type: twig
+                frontend_type: html
+                template: '@AligentInvoice/Datagrid/Property/status.html.twig'
+            issueDate:
+                label: aligent.invoice.issue_date.label
+                type: twig
+                frontend_type: html
+                template: '@AligentInvoice/Datagrid/Property/date.html.twig'
+            dueDate:
+                label: aligent.invoice.due_date.label
+                type: twig
+                frontend_type: html
+                template: '@AligentInvoice/Datagrid/Property/date.html.twig'
+            amount:
+                label: aligent.invoice.amount.label
+                frontend_type: currency
+            totalTax:
+                label: aligent.invoice.tax_total.label
+                frontend_type: currency
+            amountPaid:
+                label: aligent.invoice.amount_paid.label
+                frontend_type: currency
+            balance:
+                label: aligent.invoice.balance.label
+                frontend_type: currency
+        filters:
+            columns:
+                invoiceNo:
+                    enabled: true
+                    data_name: invoice.invoiceNo
+                    type: string
+                amount:
+                    enabled: true
+                    data_name: invoice.amount
+                    type: currency
+                invoiceStatusId:
+                    enabled: true
+                    type: enum
+                    data_name: invoice.status
+                    enum_code: invoice_status
+                dueDate:
+                    enabled: false
+                    type: date
+                    data_name: invoice.dueDate
+        sorters:
+            columns:
+                invoiceNo: { data_name: invoice.invoiceNo }
+                issueDate: { data_name: invoice.issueDate }
+                dueDate: { data_name: invoice.dueDate }
+                amount: { data_name: invoice.amount }
+                amountPaid: { data_name: invoice.amountPaid }
+                invoiceStatusId: { data_name: invoice.status }
+                balance: { data_name: balance }
+            default:
+                dueDate: ASC
+        properties:
+            id: ~
+            view_link:
+                type: url
+                route: aligent_invoice_frontend_view
+                params: [ id ]
+        actions:
+            view:
+                type: navigate
+                label: oro.grid.action.view
+                link: view_link
+                icon: eye
+                rowAction: true
+        inline_editing:
+            enable: false
+
+    aligent-invoices-grid:
+        extends: base-aligent-invoices-grid
+        source:
+            query:
+                select:
+                    - customer.name as oroCustomerName
+                join:
+                    left:
+                        - { join: invoice.customer, alias: customer }
+        columns:
+            oroCustomerName:
+                label: aligent.invoice.customer.label
+        properties:
+            view_link:
+                route: aligent_invoice_view
+        filters:
+            columns:
+                invoiceNo:
+                    type: string
+                    data_name: invoice.invoiceNo
+                issueDate:
+                    type: datetime
+                    data_name: invoice.issueDate
+                dueDate:
+                    type: date
+                    data_name: invoice.dueDate
+        views_list: '@aligent.invoice.datagrid.invoice_view_list'
+        action_configuration:
+            update: false
+            delete: false
+
+    frontend-aligent-invoices-grid:
+        extends: base-aligent-invoices-grid
+        options:
+            frontend: true
+        properties:
+            view_link:
+                route: aligent_invoice_frontend_view
+        views_list: '@aligent.invoice.datagrid.invoice_view_list'
+
+    base-aligent-invoice-line-items-grid:
+        extended_entity_name: 'Aligent\InvoiceBundle\Entity\InvoiceLineItem'
+        options:
+            entityHint: aligent.invoice.invoicelineitem.entity_plural_label
+            frontend: false
+            mass_actions:
+                delete:
+                    enabled: false
+        source:
+            type: orm
+            query:
+                select:
+                    - invoicelineitem.id
+                    - invoicelineitem.summary
+                    - invoicelineitem.amount
+                    - invoicelineitem.currency
+                from:
+                    - { table: Aligent\InvoiceBundle\Entity\InvoiceLineItem, alias: invoicelineitem }
+                where:
+                    and:
+                        - invoicelineitem.invoice = :invoice_id
+                orderBy:
+                    - column: invoicelineitem.id
+                      dir: ASC
+            bind_parameters:
+                - invoice_id
+        columns:
+            id:
+                renderable: false
+                label: aligent.invoice.id.label
+            invoice:
+                renderable: false
+                label: aligent.invoice.invoicelineitem.invoice.label
+            summary:
+                label: aligent.invoice.invoicelineitem.summary.label
+            amount:
+                label: aligent.invoice.invoicelineitem.amount.label
+                frontend_type: currency
+        sorters:
+            columns:
+                id: {data_name: invoicelineitem.id }
+                amount: { data_name: invoicelineitem.amount }
+            default:
+                id: ASC
+        inline_editing:
+            enable: false
+        action_configuration:
+            update: false
+            delete: false
+
+    aligent-invoice-line-items-grid:
+        extends: base-aligent-invoice-line-items-grid
+
+    frontend-aligent-invoice-line-items-grid:
+        extends: base-aligent-invoice-line-items-grid
+        options:
+            frontend: true
+
+    base-aligent-invoice-payments-grid:
+        extended_entity_name: 'Aligent\InvoiceBundle\Entity\InvoicePayment'
+        source:
+            type: orm
+            query:
+                select:
+                    - invoicePayment.id
+                    - invoicePayment.amount
+                    - invoicePayment.currency
+                    - invoicePayment.createdAt
+                    - invoicePayment.updatedAt
+                    - paymentTransaction.paymentMethod
+                    - paymentTransaction.action
+                    - paymentTransaction.successful
+                from:
+                    - { table: Aligent\InvoiceBundle\Entity\InvoicePayment, alias: invoicePayment }
+                join:
+                    inner:
+                        - { join: invoicePayment.lineItems, alias: invoicePaymentLineItem }
+                    left:
+                        -
+                            join: 'Oro\Bundle\PaymentBundle\Entity\PaymentTransaction'
+                            alias: paymentTransaction
+                            conditionType: WITH
+                            condition: 'paymentTransaction.entityIdentifier = invoicePayment.id AND paymentTransaction.entityClass = ''Aligent\InvoiceBundle\Entity\InvoicePayment'''
+                where:
+                    and:
+                        - invoicePaymentLineItem.invoice = :invoice_id
+                orderBy:
+                    -   column: invoicePayment.id
+                        dir: ASC
+            bind_parameters:
+                - invoice_id
+        columns:
+            id: ~
+            amount: ~
+            currency: ~
+            paymentMethod:
+                label: oro.payment.paymenttransaction.paymentMethod.label
+                type: twig
+                frontend_type: html
+                template: '@OroPayment/PaymentTransaction/Datagrid/paymentMethod.html.twig'
+            action:
+                label: oro.payment.paymenttransaction.action.label
+                type: twig
+                frontend_type: html
+                template: '@OroPayment/PaymentTransaction/Datagrid/action.html.twig'
+            successful:
+                label: oro.payment.paymenttransaction.successful.label
+                frontend_type: boolean
+            createdAt:
+                frontend_type: datetime
+            updatedAt:
+                frontend_type: datetime
+                renderable: false
+
+    aligent-invoice-payments-grid:
+        extends: base-aligent-invoice-payments-grid
+
+    # Datagrid to show the list of Invoices to pay on the Create Invoice Payment form
+    frontend-aligent-invoice-payment-line-items-edit-grid:
+        acl_resource: aligent_frontend_invoice_payment_create
+        options:
+            frontend: true
+            rowSelection:
+                dataField: id
+                columnName: isEnabled
+                selectors:
+                    included: '#paymentAppendInvoices'
+                    excluded: '#paymentRemoveInvoices'
+            toolbarOptions:
+                hide: true
+                pagination:
+                    onePage: true
+            jsmodules:
+                - orodatagrid/js/datagrid/listener/column-form-listener
+        # 'array' Data Source handled by FrontendInvoicePaymentLineItemsGridListener
+        source:
+            type: array
+        columns:
+            id:
+                renderable: false
+                frontend_type: integer
+            isEnabled:
+                label: 'Include'
+                editable: true
+                frontend_type: boolean
+            invoice:
+                label: aligent.invoice.entity_label
+                frontend_type: string
+            invoiceStatusId:
+                label: aligent.invoice.status.label
+                type: twig
+                frontend_type: html
+                template: '@AligentInvoice/Datagrid/Property/status.html.twig'
+            amount:
+                label: aligent.invoice.amount.label
+                frontend_type: currency
+            amountPaid:
+                label: aligent.invoice.amount_paid.label
+                frontend_type: currency
+            issueDate:
+                label: aligent.invoice.issue_date.label
+                type: twig
+                frontend_type: html
+                template: '@AligentInvoice/Datagrid/Property/date.html.twig'
+            dueDate:
+                label: aligent.invoice.due_date.label
+                type: twig
+                frontend_type: html
+                template: '@AligentInvoice/Datagrid/Property/date.html.twig'
+            paymentAmount:
+                label: aligent.invoice.frontend.payment.line_items.payment_amount.label
+                type: twig
+                frontend_type: html
+                template: '@AligentInvoice/Datagrid/Property/amountInput.html.twig'
+        properties:
+            id: ~
+            view_link:
+                type: url
+                route: aligent_invoice_frontend_view
+                params: [ id ]
+        actions:
+            view:
+                type: navigate
+                label: oro.grid.action.view
+                link: view_link
+                icon: eye
+                rowAction: false
+        bind_parameters:
+            -
+                name: invoicePayment

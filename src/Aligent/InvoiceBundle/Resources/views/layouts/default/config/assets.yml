@@ -1,0 +1,5 @@
+styles:
+    inputs:
+        - 'bundles/aligentinvoice/themes/default/scss/styles.scss'
+
+    output: 'css/styles.css'

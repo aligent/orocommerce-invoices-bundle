@@ -1,0 +1,18 @@
+operations:
+
+    aligent_invoice_frontend_payment_create:
+        label: aligent.invoice.frontend.payment.actions.create.label
+        enabled: true
+        applications: [commerce]
+        routes:
+            - aligent_invoice_frontend_index
+            - aligent_invoice_frontend_view
+        acl_resource: aligent_frontend_invoice_payment_create
+        button_options:
+            class: btn--info
+            icon: fa-credit-card
+        order: 10
+        actions:
+            - '@redirect':
+                  parameters:
+                      route: aligent_invoice_frontend_payment_create

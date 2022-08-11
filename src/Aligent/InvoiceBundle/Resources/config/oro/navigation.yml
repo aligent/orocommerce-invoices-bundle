@@ -1,0 +1,41 @@
+navigation:
+    menu_config:
+        items:
+            aligent_invoices:
+                label: aligent.invoice.entity_plural_label
+                route: aligent_invoice_index
+
+            aligent_invoice_frontend_invoices:
+                label:           'aligent.invoice.navigation.view'
+                route:           'aligent_invoice_frontend_index'
+                acl_resource_id: 'aligent_invoice_frontend_view'
+                position:        65
+                extras:
+                    routes:
+                        - 'aligent_invoice_frontend_index'
+                        - 'aligent_invoice_frontend_view'
+                        - 'aligent_invoice_frontend_payment'
+
+        tree:
+            application_menu:
+                children:
+                    sales_tab:
+                        children:
+                            aligent_invoices: ~
+
+            frontend_menu:
+                children:
+                    oro_customer_menu_customer_user_index:
+                        children:
+                            aligent_invoice_frontend_invoices: ~
+
+            oro_customer_menu:
+                children:
+                    aligent_invoice_frontend_invoices: ~
+
+    titles:
+        aligent_invoice_frontend_index: 'aligent.invoice.entity_plural_label'
+        aligent_invoice_frontend_view: 'aligent.invoice.navigation.view'
+        aligent_invoice_frontend_payment: 'aligent.invoice.frontend.payment.actions.create.label'
+        aligent_invoice_index: ~
+        aligent_invoice_view: 'Invoice %invoiceNo%'

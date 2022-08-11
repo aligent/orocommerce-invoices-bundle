@@ -1,0 +1,108 @@
+Aligent\InvoiceBundle\Entity\Invoice:
+    open_invoice_1:
+        customer: '@invoice_customer_a'
+        status: '@invoice_status_open'
+        invoiceNo: 'INV001'
+        issueDate: '<date_create()>'
+        dueDate: '<date_create("+12 months")>'
+        amount: 100.00
+        amountPaid: 0.00
+        currency: 'AUD'
+        totalTax: 9.09
+    open_invoice_2:
+        customer: '@invoice_customer_b'
+        status: '@invoice_status_open'
+        invoiceNo: 'INV002'
+        issueDate: '<date_create()>'
+        dueDate: '<date_create("+12 months")>'
+        amount: 150.00
+        amountPaid: 30.00
+        currency: 'AUD'
+        totalTax: 13.63
+    overdue_invoice_1:
+        customer: '@invoice_customer_a'
+        status: '@invoice_status_overdue'
+        invoiceNo: 'INV003'
+        issueDate: '<date_create("-1 months")>'
+        dueDate: '<date_create("-2 weeks")>'
+        amount: 100.00
+        amountPaid: 50.00
+        currency: 'AUD'
+        totalTax: 9.09
+    overdue_invoice_2:
+        customer: '@invoice_customer_b'
+        status: '@invoice_status_overdue'
+        invoiceNo: 'INV004'
+        issueDate: '<date_create("-1 months")>'
+        dueDate: '<date_create("-2 weeks")>'
+        amount: 150.00
+        amountPaid: 0.00
+        currency: 'AUD'
+        totalTax: 13.63
+    paid_invoice_1:
+        customer: '@invoice_customer_a'
+        status: '@invoice_status_paid'
+        invoiceNo: 'INV005'
+        issueDate: '<date_create("-1 months")>'
+        dueDate: '<date_create("-2 weeks")>'
+        amount: 50.00
+        amountPaid: 5.00
+        currency: 'AUD'
+        totalTax: 4.54
+
+Aligent\InvoiceBundle\Entity\InvoiceLineItem:
+    open_invoice_1_line_item_1:
+        invoice: '@open_invoice_1'
+        summary: 'Product A'
+        amount: 70.00
+        currency: 'AUD'
+    open_invoice_1_line_item_2:
+        invoice: '@open_invoice_1'
+        summary: 'Product B'
+        amount: 30.00
+        currency: 'AUD'
+    open_invoice_2_line_item_1:
+        invoice: '@open_invoice_2'
+        summary: 'Product A'
+        amount: 70.00
+        currency: 'AUD'
+    open_invoice_2_line_item_2:
+        invoice: '@open_invoice_2'
+        summary: 'Product C'
+        amount: 50.00
+        currency: 'AUD'
+    open_invoice_2_line_item_3:
+        invoice: '@open_invoice_2'
+        summary: 'Product D'
+        amount: 30.00
+        currency: 'AUD'
+    overdue_invoice_1_line_item_1:
+        invoice: '@overdue_invoice_1'
+        summary: 'Product A'
+        amount: 70.00
+        currency: 'AUD'
+    overdue_invoice_1_line_item_2:
+        invoice: '@overdue_invoice_1'
+        summary: 'Product B'
+        amount: 30.00
+        currency: 'AUD'
+    overdue_invoice_2_line_item_1:
+        invoice: '@overdue_invoice_2'
+        summary: 'Product A'
+        amount: 70.00
+        currency: 'AUD'
+    overdue_invoice_2_line_item_2:
+        invoice: '@overdue_invoice_2'
+        summary: 'Product C'
+        amount: 50.00
+        currency: 'AUD'
+    overdue_invoice_2_line_item_3:
+        invoice: '@overdue_invoice_2'
+        summary: 'Product D'
+        amount: 30.00
+        currency: 'AUD'
+    paid_invoice_1_line_item_1:
+        invoice: '@paid_invoice_1'
+        summary: 'Product C'
+        amount: 50.00
+        currency: 'AUD'

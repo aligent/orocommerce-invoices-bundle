@@ -1,0 +1,93 @@
+aligent:
+    invoice:
+        entity_label: Invoice
+        entity_plural_label: Invoices
+        entity_grid_all_view_label: All %entity_plural_label%
+        id.label: ID
+        invoice_no.label: Invoice No.
+        customer.label: Customer
+        issue_date.label: Issue Date
+        due_date.label: Due Date
+        amount.label: Amount
+        tax_total.label: Total Tax
+        currency.label: Currency
+        amount_paid.label: Amount Paid
+        line_items.label: Invoice Line Items
+        status.label: Invoice Status
+        balance.label: Balance
+
+        invoicelineitem:
+            entity_label: Invoice Line Item
+            entity_plural_label: Invoice Line Items
+            id.label: ID
+            invoice.label: Invoice
+            amount.label: Amount
+            currency.label: Currency
+            summary.label: Summary
+
+        invoicepayment:
+            entity_label: Invoice Payment
+            entity_plural_label: Invoice Payments
+            id.label: ID
+            payment_method.label: Payment Method
+            amount.label: Amount
+            total.label: Total
+            currency.label: Currency
+            line_items.label: Invoices
+            subtotal.label: Subtotal
+
+        invoicepaymentlineitem:
+            entity_label: Invoice Payment Line Item
+            entity_plural_label: Invoice Payment Line Items
+            id.label: ID
+            invoice.label: Invoice
+            invoice_payment.label: Invoice Payment
+            amount.label: Amount
+            currency.label: Currency
+
+        system_configuration:
+            groups:
+                invoice_management:
+                    title: 'Invoice Management'
+            fields:
+                invoices_enabled:
+                    label: Enable Invoices
+                    tooltip: Enable Invoices
+                    description: Enable Invoices
+                invoice_payment_methods:
+                    label: Payment Methods
+                    tooltip: Payment Methods
+                    description: Payment Methods
+                payment_message_enabled:
+                    label: Enable Custom Payment Form Message
+                    tooltip: Show the Custom Message on the Storefront Payment Form?
+                payment_message_text:
+                    label:  Custom Payment Form Message Text
+
+        navigation:
+            view: 'Invoices'
+
+        frontend:
+            invoice:
+                identifier.label: 'Invoice #%identifier%'
+                toolbar-actions:
+                    btn:
+                        print: 'Print Invoice'
+            invoice_link.text: '< Back to Invoice List'
+            payment:
+                line_items:
+                    payment_amount.label: 'Payment Amount'
+                actions:
+                    create.label: 'Make Payment'
+                    process.label: 'Process Payment'
+                    cancel.label: 'Cancel'
+                title.label: 'Make an Invoice Payment'
+                success.message: 'Your payment has been made successfully'
+                failed.message: 'Your payment was unsuccessful, please try again'
+                inactive.message: 'Payment has already been marked as complete, please try again'
+
+
+        sections:
+            general.label: 'General'
+            line_items.label: 'Invoice Line Items'
+            payments.label: 'Invoice Payments'

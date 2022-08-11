@@ -1,0 +1,14 @@
+layout:
+    imports:
+        -
+            id: aligent_invoice_frontend_grid
+            root: page_content
+            namespace: aligent_invoices
+        -
+            id: oro_customer_page
+
+    actions:
+        - '@setOption':
+            id: page_title
+            optionName: defaultValue
+            optionValue: 'aligent.invoice.entity_plural_label'

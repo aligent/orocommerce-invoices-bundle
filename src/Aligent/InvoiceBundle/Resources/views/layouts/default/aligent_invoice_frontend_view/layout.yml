@@ -1,0 +1,144 @@
+layout:
+    imports:
+        -
+            id: aligent_invoice_line_items_frontend_grid
+            root: invoice_line_item_container
+            namespace: aligent_invoice_line_items
+        -
+            id: oro_customer_page
+        -
+            id: oro_customer_toolbar_actions
+            root: invoice_line_item_page
+            namespace: invoice_line_item_page_toolbar
+
+    actions:
+        - '@setBlockTheme':
+              themes: 'layout.html.twig'
+        - '@setOption':
+              id: title
+              optionName: params
+              optionValue:
+                  '%identifier%': '=data["invoice"].getInvoiceNo()'
+        - '@setOption':
+              id: page_title
+              optionName: defaultValue
+              optionValue:
+                  label: 'aligent.invoice.frontend.invoice.identifier.label'
+                  parameters:
+                      '%identifier%': '=data["invoice"].getInvoiceNo()'
+        - '@setOption':
+              id: invoice_line_item_page_toolbar_print_button
+              optionName: text
+              optionValue: 'aligent.invoice.frontend.invoice.toolbar-actions.btn.print'
+        -  '@add':
+              id: aligent_invoice_list_link
+              blockType: link
+              parentId: invoice_line_item_page_toolbar_actions-list
+              prepend: true
+              options:
+                  visible: '=data["acl"].isGranted("aligent_invoice_frontend_view")'
+                  route_name: aligent_invoice_frontend_index
+                  text: 'aligent.invoice.frontend.invoice_link.text'
+                  attr:
+                      class: 'icons-holder-text operation-button  btn btn--link'
+
+        - '@add':
+            id: invoice_controls
+            blockType: line_buttons
+            parentId: invoice_line_item_page_toolbar_actions-list
+            options:
+                buttons: '=data["buttons"].getAll(data["invoice"])'
+
+        - '@addTree':
+              items:
+                  invoice_line_item_page:
+                      blockType: container
+                  invoice_line_item_container:
+                      blockType: container
+                  invoice_line_item_header:
+                      blockType: text
+                      options:
+                          text: 'Invoice Details'
+                  invoice_line_item_body_container:
+                      blockType: container
+                      options:
+                          additional_block_prefixes: [ 'order_body_block_container' ]
+                  invoice_line_item_body_column_left:
+                      blockType: container
+                      options:
+                          additional_block_prefixes: [ 'order_body_column' ]
+                  invoice_no:
+                      blockType: text
+                      options:
+                          text: '=data["invoice"].getInvoiceNo()'
+                          label: 'aligent.invoice.invoice_no.label'
+                          additional_block_prefixes: [ 'order_body_column_element' ]
+                  invoice_status:
+                      blockType: container
+                      options:
+                          label: 'aligent.invoice.status.label'
+                          additional_block_prefixes: [ 'order_body_column_element' ]
+                  invoice_status_value:
+                      blockType: text
+                      options:
+                          text: '=data["invoice"].getStatus()'
+                          label: 'aligent.invoice.status.label'
+                          vars:
+                              due_date: '=data["invoice"].getDueDate()'
+                  invoice_issue_date:
+                      blockType: date
+                      options:
+                          date: '=data["invoice"].getIssueDate()'
+                          dateType: 3
+                          label: 'aligent.invoice.issue_date.label'
+                          additional_block_prefixes: [ 'order_body_column_element' ]
+                  invoice_due_date:
+                      blockType: date
+                      options:
+                          date: '=data["invoice"].getDueDate()'
+                          dateType: 3
+                          label: 'aligent.invoice.due_date.label'
+                          additional_block_prefixes: [ 'order_body_column_element' ]
+                  invoice_amount:
+                      blockType: currency
+                      options:
+                          label: 'aligent.invoice.amount.label'
+                          value: '=data["invoice"].getAmount()'
+                          currency: '=data["invoice"].getCurrency()'
+                          additional_block_prefixes: [ 'order_body_column_element' ]
+                  invoice_total_tax:
+                      blockType: currency
+                      options:
+                          label: 'aligent.invoice.tax_total.label'
+                          value: '=data["invoice"].getTotalTax()'
+                          currency: '=data["invoice"].getCurrency()'
+                          additional_block_prefixes: [ 'order_body_column_element' ]
+                  invoice_amount_paid:
+                      blockType: currency
+                      options:
+                          label: 'aligent.invoice.amount_paid.label'
+                          value: '=data["invoice"].getAmountPaid()'
+                          currency: '=data["invoice"].getCurrency()'
+                          additional_block_prefixes: [ 'order_body_column_element' ]
+
+                  invoice_line_item_body_column_right:
+                      blockType: container
+                      options:
+                          additional_block_prefixes: [ 'order_body_column' ]
+
+              tree:
+                  page_content:
+                      invoice_line_item_page:
+                          invoice_line_item_container:
+                              invoice_line_item_header: ~
+                              invoice_line_item_body_container:
+                                  invoice_line_item_body_column_left:
+                                      invoice_no: ~
+                                      invoice_status:
+                                          invoice_status_value: ~
+                                      invoice_issue_date: ~
+                                      invoice_due_date: ~
+                                      invoice_amount: ~
+                                      invoice_total_tax: ~
+                                      invoice_amount_paid: ~
+                                  invoice_line_item_body_column_right: ~

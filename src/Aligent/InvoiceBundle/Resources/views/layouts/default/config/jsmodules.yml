@@ -1,0 +1,7 @@
+aliases:
+    'aligentinvoice/js/app/views/payments-form-view': aligentinvoice/js/app/views/payments-form-view
+    'aligentinvoice/js/app/components/payments-component': aligentinvoice/js/app/components/payments-component
+
+dynamic-imports:
+    commons:
+        - aligentinvoice/js/app/components/payments-component
