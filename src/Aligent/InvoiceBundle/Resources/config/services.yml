@@ -52,10 +52,11 @@ services:
             - ['setPaymentManager', ['@Aligent\InvoiceBundle\Manager\PaymentManager']]
 
     # Form Types
-    Aligent\InvoiceBundle\Form\Type\PaymentMethodMultiSelectFormType:
+    Aligent\InvoiceBundle\Form\Type\PaymentMethodsConfigsRuleMultiSelectFormType:
         arguments:
-            - '@oro_payment.payment_method.composite_provider'
             - '@oro_payment.payment_method_view.composite_provider'
+            - '@oro_payment.repository.payment_methods_configs_rule'
+            - '@translator'
         tags:
             - { name: form.type, alias: aligent_invoice_payment_method }
 
@@ -132,6 +133,7 @@ services:
         arguments:
             - '@oro_payment.repository.payment_methods_configs_rule'
             - '@oro_config.manager'
+            - '@oro_payment.rule_filtration.basic_service'
 
     # Factories
     Aligent\InvoiceBundle\Factory\PaymentContextFactory:

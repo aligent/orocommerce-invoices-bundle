@@ -13,7 +13,7 @@ system_configuration:
                 tooltip: aligent.invoice.system_configuration.fields.invoices_enabled.tooltip
         aligent_invoice.invoices_payment_methods:
             data_type: array
-            type: Aligent\InvoiceBundle\Form\Type\PaymentMethodMultiSelectFormType
+            type: Aligent\InvoiceBundle\Form\Type\PaymentMethodsConfigsRuleMultiSelectFormType
             priority: 90
             options:
                 label: aligent.invoice.system_configuration.fields.invoice_payment_methods.label
