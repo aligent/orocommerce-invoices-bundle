@@ -19,6 +19,7 @@ use Oro\Bundle\FormBundle\Model\UpdateHandlerFacade;
 use Oro\Bundle\LayoutBundle\Annotation\Layout;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use Oro\Bundle\SecurityBundle\Annotation\CsrfProtection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -153,6 +154,7 @@ class FrontendInvoiceController extends AbstractController
     /**
      * @Route("/payment/save_state/{id}", name="aligent_invoice_frontend_payment_save_state", requirements={"id"="\d+"})
      * @AclAncestor("aligent_frontend_invoice_payment_create")
+     * @CsrfProtection()
      * @param Request $request
      * @param InvoicePayment $invoicePayment
      * @return JsonResponse

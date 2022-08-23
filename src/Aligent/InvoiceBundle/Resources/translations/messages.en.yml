@@ -58,6 +58,8 @@ aligent:
                     label: Payment Methods
                     tooltip: Payment Methods
                     description: Payment Methods
+                    no_methods_available: No Methods Available
+                    disabled_method_suffix: ' - DISABLED'
                 payment_message_enabled:
                     label: Enable Custom Payment Form Message
                     tooltip: Show the Custom Message on the Storefront Payment Form?

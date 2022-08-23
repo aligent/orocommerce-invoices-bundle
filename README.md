@@ -160,7 +160,7 @@ Roadmap / Remaining Tasks
 - [x] OroCommerce 5.0 Support
 - [x] Implement Unit Tests
 - [x] Implement Demo Invoice Data Fixtures (using [aligent/oro-fixtures](https://github.com/aligent/oro-fixtures))
-- [ ] Update Payment Methods Configuration to use Rules instead of Methods ([#2](https://github.com/aligent/orocommerce-invoices-bundle/issues/2))
+- [x] Update Payment Methods Configuration to use Rules instead of Methods ([#2](https://github.com/aligent/orocommerce-invoices-bundle/issues/2))
 - [ ] Improve reliability/usability of Invoice Payment JavaScript components and SaveState feature
 - [ ] Add ability to disable Invoice Payments globally (view-only mode)
 - [ ] Implement Admin CRUD UI for Invoices with User Role ACL Permissions
